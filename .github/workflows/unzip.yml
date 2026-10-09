@@ -1,11 +1,8 @@
 name: Unzip Project
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   unzip:
     runs-on: ubuntu-latest
