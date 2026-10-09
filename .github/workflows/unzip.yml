@@ -13,12 +13,12 @@ jobs:
           ls -la
           if [ -f GrayTrackAndroid.zip ]; then
             unzip -o GrayTrackAndroid.zip
-            rm GrayTrackAndroid.zip
+            rm -f GrayTrackAndroid.zip
             git config user.name "moknethunter"
             git config user.email "moknethunter@github.com"
-            git add.
-            git commit -m "ready"
+            git add .
+            git commit -m "ready" || echo "No changes to commit"
             git push
           else
             echo "no zip file found"
-           
+          fi
