@@ -1,1 +1,24 @@
+name: Unzip Project
+on: workflow_dispatch
 
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip file
+        run: |
+          ls -la
+          unzip -o GrayTrackAndroid.zip
+          rm GrayTrackAndroid.zip
+          ls -la
+      - name: Commit folders
+        run: |
+          git config user.name "moknethunter"
+          git config user.email "moknethunter@github.com"
+          git add .
+          git commit -m "unzip project - add mlkit analyzer" || echo "already done"
+          git push
