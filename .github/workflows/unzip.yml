@@ -1,18 +1,30 @@
 name: Unzip Project
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
 permissions:
   contents: write
+
 jobs:
   unzip:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'zip') == false
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -o GrayTrackAndroid.zip
-      - run: rm -f GrayTrackAndroid.zip
-      - run: |
-          git config user.name "moknethunter"
-          git config user.email "moknethunter@github.com"
-          git add .
-          git commit -m "unzip ready" || true
-          git push
+      - name: Check zip exists
+        run: ls -la | grep zip || echo "no zip"
+      - name: Unzip
+        run: |
+          if [ -f GrayTrackAndroid.zip ]; then
+            unzip -o GrayTrackAndroid.zip
+            rm -f GrayTrackAndroid.zip
+            git config user.name "moknethunter"
+            git config user.email "moknethunter@github.com"
+            git add .
+            git commit -m "auto unzip folders"
+            git push
+          else
+            echo "already unzipped"
+          fi
