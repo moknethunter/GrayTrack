@@ -1,8 +1,6 @@
 name: Build APK
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
   build:
@@ -22,15 +20,18 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Generate wrapper if missing
+      - name: Check files
+        run: ls -la
+
+      - name: Create gradle wrapper if missing
         run: |
-          if [! -f./gradlew ]; then
+          if [ ! -f ./gradlew ]; then
             gradle wrapper --gradle-version 8.5
           fi
           chmod +x gradlew
 
       - name: Build Debug APK
-        run:./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
