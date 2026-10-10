@@ -1,10 +1,15 @@
 name: Build APK
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: GrayTrackAndroid
     steps:
       - uses: actions/checkout@v4
 
@@ -20,21 +25,24 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Check files
-        run: ls -la
-
-      - name: Create gradle wrapper if missing
+      - name: Check project structure
         run: |
-          if [ ! -f ./gradlew ]; then
-            gradle wrapper --gradle-version 8.5
+          pwd
+          ls -la
+          ls -la app
+
+      - name: Create gradle wrapper
+        run: |
+          if [! -f./gradlew ]; then
+            gradle wrapper --gradle-version 8.7
           fi
           chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run:./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GrayTrack-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: GrayTrackAndroid/app/build/outputs/apk/debug/*.apk
